@@ -1,6 +1,6 @@
 class Persona (object):
     
-    #contrucor
+    #contructor
     def __init__(self, nombre:str, apellido: str, correo:str, telefono: int):
         
         self.nombre = nombre
