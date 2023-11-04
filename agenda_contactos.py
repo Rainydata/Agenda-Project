@@ -7,6 +7,7 @@ from tkinter import messagebox
 
 listaContactos = Tk()
 
+#Función que centra la ventana
 def centrar_ventana(window, width, height):
     screen_width = window.winfo_screenwidth()
     screen_height = window.winfo_screenheight()
@@ -16,14 +17,18 @@ def centrar_ventana(window, width, height):
 
     window.geometry(f"{width}x{height}+{position_right}+{position_top}")
 
-centrar_ventana(listaContactos, 1220, 300)
+centrar_ventana(listaContactos, 1220, 310)
 
 listaContactos.title("Lista de contactos")
 
 groupBox = LabelFrame(listaContactos, text="Tus contactos:")
-groupBox.pack(padx=5, pady=5)
+groupBox.grid(row=0, column=0)
+groupBox.config(background="#144966")
 
-tablaContactos = ttk.Treeview(groupBox, columns=("Nombre", "Apellido", "Número", "Correo", "Dirección", "Relación"), show="headings", height=10,)
+style = ttk.Style()
+style.configure("Treeview",background="#7AAFCC")
+tablaContactos = ttk.Treeview(groupBox, style="Treeview", columns=("Nombre", "Apellido", "Número", "Correo", "Dirección", "Relación"), show="headings", height=10,)
+
 
 tablaContactos.column("# 1", anchor=CENTER)
 tablaContactos.heading("# 1", text="Nombre")
@@ -38,7 +43,11 @@ tablaContactos.heading("# 5", text="Dirección")
 tablaContactos.column("# 6", anchor=CENTER)
 tablaContactos.heading("# 6", text="Relación")
 
-tablaContactos.pack()
+
+#Agregar contactos a la tabla
+tablaContactos.insert("", tk.END, values=("Juan", "Perez", "123456789", "juan@hotmail.com", "Calle 1", "Familiar"))
+
+tablaContactos.grid(row=0, column=0, padx=10, pady=10)
 
 
 def btnAgregarContactos():
@@ -74,8 +83,13 @@ def btnAgregarContactos():
     Button(groupBox, text ="Agregar", width=10, font=("Arial", 12)).grid(row=6, column=1, pady=25)
     Button(groupBox, text = "Tus contactos", font=("Arial", 12)).grid(row=6, column=0, pady=25)
 
-btnAgregarContacto = Button(groupBox, text = "Agregar nuevo contacto", width=20, font=("Arial", 10), command=btnAgregarContactos).pack(pady=5)
+groupBox = LabelFrame(listaContactos)
+groupBox.grid(row=1, column=0)
+groupBox.config(background="#144966")
 
+btnAgregarContacto = Button(groupBox, text = "Agregar nuevo contacto", width=20, font=("Arial", 10), command=btnAgregarContactos).grid(row=0, column=0, pady=5, padx=5)
+btnEditarContacto = Button(groupBox, text = "Editar contacto", width=20, font=("Arial", 10)).grid(row=0, column=1, pady=5, padx=5)
+btnEliminarContacto = Button(groupBox, text = "Eliminar contacto", width=20, font=("Arial", 10)).grid(row=0, column=2, pady=5, padx=5)
     
 
 
