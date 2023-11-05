@@ -20,6 +20,7 @@ def centrar_ventana(window, width, height):
 centrar_ventana(listaContactos, 1220, 310)
 
 listaContactos.title("Lista de contactos")
+listaContactos.configure(background="#144966")
 
 groupBox = LabelFrame(listaContactos, text="Tus contactos:")
 groupBox.grid(row=0, column=0)
@@ -85,12 +86,12 @@ def btnAgregarContactos():
 
 groupBox = LabelFrame(listaContactos)
 groupBox.grid(row=1, column=0)
-groupBox.config(background="#144966")
+#groupBox.config(background="#144966")
 
 btnAgregarContacto = Button(groupBox, text = "Agregar nuevo contacto", width=20, font=("Arial", 10), command=btnAgregarContactos).grid(row=0, column=0, pady=5, padx=5)
 btnEditarContacto = Button(groupBox, text = "Editar contacto", width=20, font=("Arial", 10)).grid(row=0, column=1, pady=5, padx=5)
 btnEliminarContacto = Button(groupBox, text = "Eliminar contacto", width=20, font=("Arial", 10)).grid(row=0, column=2, pady=5, padx=5)
-    
+
 
 
 listaContactos.mainloop()
