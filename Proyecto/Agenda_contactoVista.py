@@ -155,8 +155,14 @@ def btnEditarContactos():
         # Se obtiene el contacto seleccionado
         Contacto = tablaContactos.focus()
         #Guarda el nombre del contacto
+        
         ContactoNombre = tablaContactos.item(Contacto)['values'][0]
-    
+        ContactoApellido = tablaContactos.item(Contacto)['values'][1]
+        ContactoNumero = tablaContactos.item(Contacto)['values'][2]
+        ContactoCorreo = tablaContactos.item(Contacto)['values'][3]
+        ContactoDireccion = tablaContactos.item(Contacto)['values'][4]         
+        ContactoRelacion = tablaContactos.item(Contacto)['values'][5]
+
         ventanaEditarContactos = Toplevel() 
         centrar_ventana(ventanaEditarContactos, 720, 300)
         ventanaEditarContactos.title("Editar contacto")
@@ -167,26 +173,33 @@ def btnEditarContactos():
         labelNombre = Label(groupBox, text="Nombre: ", width=13, font=("Arial", 12)).grid(row=0, column=0)
         txtBoxNombre = Entry(groupBox, width=30)
         txtBoxNombre.grid(row=0, column=1)
+        txtBoxNombre.insert(0, ContactoNombre)
 
         labelApellido = Label(groupBox, text="Apellido: ", width=13, font=("Arial", 12)).grid(row=1, column=0)
         txtBoxApellido = Entry(groupBox, width=30)
         txtBoxApellido.grid(row=1, column=1)
+        txtBoxApellido.insert(1, ContactoApellido)
 
         labelNumero = Label(groupBox, text="Número: ", width=13, font=("Arial", 12)).grid(row=2, column=0)
         txtBoxNumero = Entry(groupBox, width=30)
         txtBoxNumero.grid(row=2, column=1)
+        txtBoxNumero.insert(2, ContactoNumero)
 
         labelCorreo = Label(groupBox, text="Correo: ", width=13, font=("Arial", 12)).grid(row=3, column=0)
         txtBoxCorreo = Entry(groupBox, width=30)
         txtBoxCorreo.grid(row=3, column=1)
+        txtBoxCorreo.insert(3, ContactoCorreo)
 
         labelDireccion = Label(groupBox, text="Dirección: ", width=13, font=("Arial", 12)).grid(row=4, column=0)
         txtBoxDireccion = Entry(groupBox, width=30)
         txtBoxDireccion.grid(row=4, column=1)
+        txtBoxDireccion.insert(4, ContactoDireccion)
 
         labelRelacion = Label(groupBox, text="Relación: ", width=13, font=("Arial", 12))
         labelRelacion.grid(row=5, column=0)
         selectRelacion = tk.StringVar()
+        selectRelacion.set(ContactoRelacion)
+
         combo = ttk.Combobox(groupBox, values = ["Familiar", "Trabajo", "Amigos"], textvariable = selectRelacion, width=27)
         combo.set("Selecciona una opción")
         combo.grid(row = 5, column = 1)
