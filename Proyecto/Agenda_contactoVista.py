@@ -151,11 +151,12 @@ def btnAgregarContactos():
 ##-------------------------------------------------------------------------------------------------------------------
 
 def btnEditarContactos():
-    # Se obtiene el contacto seleccionado
-    Contacto = tablaContactos.focus()
-    if Contacto:
+    try:
+        # Se obtiene el contacto seleccionado
+        Contacto = tablaContactos.focus()
         #Guarda el nombre del contacto
         ContactoNombre = tablaContactos.item(Contacto)['values'][0]
+    
         ventanaEditarContactos = Toplevel() 
         centrar_ventana(ventanaEditarContactos, 720, 300)
         ventanaEditarContactos.title("Editar contacto")
@@ -208,8 +209,11 @@ def btnEditarContactos():
             except ValueError as error:
                 print("Error al editar el contacto{}".format(error))   
 
-    Button(groupBox, text ="Editar", width=10, font=("Arial", 12),command=editarContacto).grid(row=6, column=1, pady=25)
-    Button(groupBox, text = "Tus contactos", font=("Arial", 12),command=lambda: cerrar_ventana(ventanaEditarContactos)).grid(row=6, column=0, pady=25)
+        Button(groupBox, text ="Editar", width=10, font=("Arial", 12),command=editarContacto).grid(row=6, column=1, pady=25)
+        Button(groupBox, text = "Tus contactos", font=("Arial", 12),command=lambda: cerrar_ventana(ventanaEditarContactos)).grid(row=6, column=0, pady=25)
+
+    except IndexError as error:
+        messagebox.showinfo(title="Error", message="Por favor seleccione un contacto")
 
 ##---------------------------------------------------------------------------------------------------------------------------------------------------
 #Funcion que gestiona el boton eliminarContacto
