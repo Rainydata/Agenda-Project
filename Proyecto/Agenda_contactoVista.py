@@ -192,14 +192,14 @@ def btnEditarContactos():
        
         def editarContacto():
             try:
-                ContactoID = tablaContactos.item(Contacto)['values'][6]
+                ContactoID = tablaContactos.item(Contacto)['values'][2]
                 nombre = txtBoxNombre.get()
                 apellido = txtBoxApellido.get()
                 numero = txtBoxNumero.get()
                 correo = txtBoxCorreo.get()
                 direccion = txtBoxDireccion.get()
                 relacion = combo.get()
-                nuevoContacto = mo.Contacto(nombre,apellido,numero,correo,direccion,relacion)
+                nuevoContacto = mo.Contacto(nombre, apellido, numero, correo, direccion, relacion)
                 co.Contacto.editarContacto(ContactoID,nuevoContacto)
                 messagebox.showinfo(title="Correcto", message="Se ha editado correctamente el contacto")
                 limpiarTabla()
