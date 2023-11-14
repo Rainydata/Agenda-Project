@@ -19,7 +19,7 @@ class Contacto:
          try:
             conexion = CConexion.ConexionBD()
             cursor = conexion.cursor()
-            sql = "UPDATE Contacto SET nombre=%s, apellido=%s,telefono=%s,correo=%s, direccion=%s, relacion=%s WHERE id=%s"
+            sql = "UPDATE Contacto SET nombre=%s, apellido=%s,telefono=%s,correo=%s, direccion=%s, relacion=%s WHERE telefono=%s"
             valores = (Contacto.nombre, Contacto.apellido,Contacto.telefono, Contacto.correo,Contacto.direccion,Contacto.relacion,ID)
             cursor.execute(sql,valores)
             conexion.commit()
@@ -55,7 +55,7 @@ class Contacto:
      try:
         conexion = CConexion.ConexionBD()
         cursor = conexion.cursor()
-        sql = "SELECT * FROM Contacto"
+        sql = "SELECT nombre, apellido, telefono, correo, direccion, relacion FROM Contacto"
         cursor.execute(sql)
         resultado = cursor.fetchall()
         conexion.close()
