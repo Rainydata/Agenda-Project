@@ -5,8 +5,8 @@ class CConexion:
     def ConexionBD():
         try:
             conexion = mysql.connector.connect(
-                user='root', password='52366230', 
-                host='127.0.0.1',database='pythonBD', 
+                user='root', password='alejandrobd411', 
+                host='127.0.0.1',database='agenda_contactos', 
                 port='3306')
         
             print("Conexion exitosa")

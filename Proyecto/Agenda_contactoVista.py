@@ -303,14 +303,17 @@ def btnEditarContactos():
 #Funcion que gestiona el boton eliminarContacto
 def btnEliminarContacto():
     #Se obtiene el Contacto seleccionado
-    ContactoEliminar = tablaContactos.focus()
-    nombreContacto = tablaContactos.item(ContactoEliminar)['values'][0]
-    telefonoContacto = tablaContactos.item(ContactoEliminar)['values'][2]
-    mensaje = messagebox.askokcancel(title="Eliminar", message=f"¿Estás seguro de que deseas eliminar a {str(nombreContacto)} de tu lista de contactos? ")
-    if mensaje == True:
-     co.Contacto.borrarContacto(telefonoContacto)
-     limpiarTabla()
-     cargarDatos()
+    try:
+        ContactoEliminar = tablaContactos.focus()
+        nombreContacto = tablaContactos.item(ContactoEliminar)['values'][0]
+        telefonoContacto = tablaContactos.item(ContactoEliminar)['values'][2]
+        mensaje = messagebox.askokcancel(title="Eliminar", message=f"¿Estás seguro de que deseas eliminar a {str(nombreContacto)} de tu lista de contactos? ")
+        if mensaje == True:
+            co.Contacto.borrarContacto(telefonoContacto)
+            limpiarTabla()
+            cargarDatos()
+    except IndexError as error:
+        messagebox.showinfo(title="Error", message="Por favor seleccione un contacto")
 
 
 ##---------------------------------------------------------------------------------------------------------------------------------------------------
@@ -348,13 +351,13 @@ campoBusqueda.trace("w", buscarContacto)
 #Creacion de botones CRUD de los contactos
 groupBox = LabelFrame(listaContactos)
 groupBox.grid(row=1, column=0)
-groupBox.config(background="#144966")
+groupBox.config(background="#144966", highlightthickness=0)
 btnAgregarContacto = Button(groupBox, text = "Agregar nuevo contacto", width=20,font=("Arial", 10), command=btnAgregarContactos).grid(row=2, column=0, pady=5, padx=5)
 btnEditarContacto = Button(groupBox, text = "Editar contacto", width=20, font=("Arial", 10), command=btnEditarContactos).grid(row=2, column=1, pady=5, padx=5)
 btnEliminarContactos = Button(groupBox, text = "Eliminar contacto", width=20, font=("Arial", 10),command=btnEliminarContacto).grid(row=2, column=2, pady=5, padx=5)
 
 #Obtiene la direccion de la imagen, la redimensiona y se inserta
-direccionImagem = r'C:\Users\benav\OneDrive\Documentos\GitHub\Agenda-Project\Proyecto\Recursos\lupa10.png'
+direccionImagem = r'Proyecto\Recursos\lupa.png'
 iconoOrigina = Image.open(direccionImagem)
 iconoRedimensionado = iconoOrigina.resize((24,24))
 
@@ -363,8 +366,9 @@ iconoRecortado = iconoRedimensionado.crop(iconoRedimensionado.getbbox())
 icon = ImageTk.PhotoImage(iconoRedimensionado)
 Labelicono = Label(groupBox, image=icon)
 Labelicono.place(x=160, y=4)
+Labelicono.config(background="#144966", highlightthickness=0)
 
-searchField = tk.Entry(groupBox, textvariable=campoBusqueda, width=25)
+searchField = tk.Entry(groupBox, textvariable=campoBusqueda, width=25, highlightthickness=0)
 searchField.grid(row=0, column=1, pady=5, padx=0)
 
 ##------------------------------------------------------------------------------------------------------------------------
