@@ -1,10 +1,9 @@
 import tkinter as tk
 
 from tkinter import *
-from tkinter import ttk
-from tkinter import messagebox
+from tkinter import ttk, messagebox, PhotoImage, Label
+
 import ControladorContactos as co
-from tkinter import messagebox
 import modelos as mo
 import re #Libreria para validar el correo
 from ControladorContactos import *
@@ -93,11 +92,12 @@ def btnAgregarContactos():
 
     ventanaAgregarContactos = Toplevel()
     ventanaAgregarContactos.title("Agregar nuevo contacto")
+    ventanaAgregarContactos.configure(background="#144966")
     centrar_ventana(ventanaAgregarContactos, 720, 300)
     
 
     groupBox = LabelFrame(ventanaAgregarContactos, text="Agregar nuevo contacto", padx=190)
-    groupBox.grid(row=0, column=0, padx=10, pady=10)
+    groupBox.grid(row=0, column=0, padx=10, pady=25)
     
     labelNombre = Label(groupBox, text="Nombre: ", width=13, font=("Arial", 12)).grid(row=0, column=0)
     txtBoxNombre = Entry(groupBox, width=30)
@@ -201,13 +201,14 @@ def btnEditarContactos():
         ContactoRelacion = tablaContactos.item(Contacto)['values'][5]
 
 
-
+        ocultar_ventana(listaContactos)
         ventanaEditarContactos = Toplevel() 
         centrar_ventana(ventanaEditarContactos, 720, 300)
         ventanaEditarContactos.title("Editar contacto")
+        ventanaEditarContactos.configure(background="#144966")
 
         groupBox = LabelFrame(ventanaEditarContactos, text="Editar el contacto con el nombre: "+ str(ContactoNombre), padx=190)
-        groupBox.grid(row=0, column=0, padx=10, pady=10)
+        groupBox.grid(row=0, column=0, padx=10, pady=25)
 
         labelNombre = Label(groupBox, text="Nombre: ", width=13, font=("Arial", 12)).grid(row=0, column=0)
         txtBoxNombre = Entry(groupBox, width=30)
@@ -284,7 +285,7 @@ def btnEditarContactos():
                 print("Error al editar el contacto{}".format(error))   
 
         Button(groupBox, text ="Aceptar", width=10, font=("Arial", 12),command=editarContacto).grid(row=6, column=1, pady=25)
-        Button(groupBox, text = "Tus contactos", font=("Arial", 12),command=lambda: mostrar_ventana(listaContactos)).grid(row=6, column=0, pady=25)
+        Button(groupBox, text = "Regresar", font=("Arial", 12),command=lambda: destruir_ventana(ventanaEditarContactos)).grid(row=6, column=0, pady=25)
 
     except IndexError as error:
         messagebox.showinfo(title="Error", message="Por favor seleccione un contacto")
@@ -334,6 +335,7 @@ campoBusqueda = tk.StringVar()
 campoBusqueda.trace("w", buscarContacto)
 
 ##------------------------------------------------------------------------------------------------------------------------
+
 #Creacion de botones CRUD de los contactos
 groupBox = LabelFrame(listaContactos)
 groupBox.grid(row=1, column=0)
@@ -342,8 +344,9 @@ btnAgregarContacto = Button(groupBox, text = "Agregar nuevo contacto", width=20,
 btnEditarContacto = Button(groupBox, text = "Editar contacto", width=20, font=("Arial", 10), command=btnEditarContactos).grid(row=0, column=1, pady=5, padx=5)
 btnEliminarContactos = Button(groupBox, text = "Eliminar contacto", width=20, font=("Arial", 10),command=btnEliminarContacto).grid(row=0, column=2, pady=5, padx=5)
 
-searchField = tk.Entry(listaContactos, textvariable=campoBusqueda, width=20)
-searchField.grid(row=2, column=0, pady=5, padx=5)
+searchField = tk.Entry(listaContactos, textvariable=campoBusqueda, width=25)
+searchField.grid(row=2, column=0, pady=5)
+
 ##------------------------------------------------------------------------------------------------------------------------
 
 
