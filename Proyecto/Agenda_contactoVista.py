@@ -49,6 +49,9 @@ def validarCorreo(correo):
         return True
     patron = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
     return patron.match(correo) is not None
+
+
+
 ##Ventana Principal -----------------------------------------------------------------------------------------------
 
 centrar_ventana(listaContactos, 1220, 310)
@@ -119,11 +122,13 @@ def btnAgregarContactos():
     labelRelacion = Label(groupBox, text="Relación: ", width=13, font=("Arial", 12))
     labelRelacion.grid(row=5, column=0)
     selectRelacion = tk.StringVar()
-    combo = ttk.Combobox(groupBox, values = ["Familiar", "Trabajo", "Amigos"], textvariable = selectRelacion, width=27)
+    combo = ttk.Combobox(groupBox, values = ["Familiar", "Trabajo", "Amigos"], textvariable = selectRelacion, state='readonly', width=27)
     combo.set("Selecciona una opción")
     combo.grid(row = 5, column = 1)
     
     ##Funcion que captura los datos y utiliza la funcion ingresar datos del controlador
+
+
 
     def guardarContacto():
    
@@ -135,6 +140,13 @@ def btnAgregarContactos():
         direccion = txtBoxDireccion.get()
         relacion =  combo.get()
         
+        if not numero.isdigit():
+            messagebox.showinfo(title="Error", message="El número no puede contener letras")
+            return
+
+        if len(numero) > 15:
+            messagebox.showinfo(title="Error", message="El número no puede tener más de 15 dígitos")
+
         if co.Contacto.validar_telefono(numero) is not None:
             messagebox.showinfo(title="Error", message="Ya existe un contacto con ese número")
             return
@@ -159,6 +171,7 @@ def btnAgregarContactos():
         txtBoxNumero.delete(0,END) 
         txtBoxCorreo.delete(0,END) 
         txtBoxDireccion.delete(0,END)
+        destruir_ventana(ventanaAgregarContactos)
             
      except ValueError as error:
         print("Error al registrar nuevo contacto {}".format(error))  
@@ -186,6 +199,8 @@ def btnEditarContactos():
         ContactoCorreo = tablaContactos.item(Contacto)['values'][3]
         ContactoDireccion = tablaContactos.item(Contacto)['values'][4]         
         ContactoRelacion = tablaContactos.item(Contacto)['values'][5]
+
+
 
         ventanaEditarContactos = Toplevel() 
         centrar_ventana(ventanaEditarContactos, 720, 300)
@@ -224,8 +239,8 @@ def btnEditarContactos():
         selectRelacion = tk.StringVar()
         selectRelacion.set(ContactoRelacion)
 
-        combo = ttk.Combobox(groupBox, values = ["Familiar", "Trabajo", "Amigos"], textvariable = selectRelacion, width=27)
-        combo.set("Selecciona una opción")
+        combo = ttk.Combobox(groupBox, values = ["Familiar", "Trabajo", "Amigos"], textvariable = selectRelacion, state='readonly', width=27)
+        combo.set(ContactoRelacion)
         combo.grid(row = 5, column = 1)
        
         def editarContacto():
@@ -237,6 +252,28 @@ def btnEditarContactos():
                 correo = txtBoxCorreo.get()
                 direccion = txtBoxDireccion.get()
                 relacion = combo.get()
+
+                if not numero.isdigit():
+                    messagebox.showinfo(title="Error", message="El número no puede contener letras")
+                    return
+
+                if len(numero) > 15:
+                    messagebox.showinfo(title="Error", message="El número no puede tener más de 15 dígitos")
+                    return
+
+                if co.Contacto.validar_telefono(numero) is not None:
+                    messagebox.showinfo(title="Error", message="Ya existe un contacto con ese número")
+                    return
+
+                if txtBoxNombre.get() == "" or txtBoxNumero.get() == "" :
+                    messagebox.showinfo(title="Error", message="El número y el teléfono son campos obligatorios")
+                    return
+                
+                elif validarCorreo(correo) == False:
+                    messagebox.showinfo(title="Error", message="El correo no es válido")
+                    return
+
+
                 nuevoContacto = mo.Contacto(nombre, apellido, numero, correo, direccion, relacion)
                 co.Contacto.editarContacto(ContactoID,nuevoContacto)
                 messagebox.showinfo(title="Correcto", message="Se ha editado correctamente el contacto")
@@ -246,7 +283,7 @@ def btnEditarContactos():
             except ValueError as error:
                 print("Error al editar el contacto{}".format(error))   
 
-        Button(groupBox, text ="Editar", width=10, font=("Arial", 12),command=editarContacto).grid(row=6, column=1, pady=25)
+        Button(groupBox, text ="Aceptar", width=10, font=("Arial", 12),command=editarContacto).grid(row=6, column=1, pady=25)
         Button(groupBox, text = "Tus contactos", font=("Arial", 12),command=lambda: mostrar_ventana(listaContactos)).grid(row=6, column=0, pady=25)
 
     except IndexError as error:
