@@ -6,6 +6,7 @@ from tkinter import messagebox
 import ControladorContactos as co
 from tkinter import messagebox
 import modelos as mo
+import re #Libreria para validar el correo
 
 listaContactos = Tk()
 
@@ -32,14 +33,20 @@ def centrar_ventana(window, width, height):
     position_right = int(screen_width / 2 - width / 2)
 
     window.geometry(f"{width}x{height}+{position_right}+{position_top}")  
+     
+def ocultar_ventana(ventana):
+    ventana.withdraw()
 
-#Funcion recursiva para cerrar la ventana  ventanaAgregarContactos
-def cerrar_ventana_actual(ventanaAgregarContactos):
-    ventanaAgregarContactos.destroy()    
+def mostrar_ventana(ventana):
+    ventana.deiconify()
 
-def cerrar_ventana(ventanaAgregarContactos):
-    cerrar_ventana_actual(ventanaAgregarContactos)
-    cerrar_ventana(ventanaAgregarContactos)          
+def destruir_ventana(ventana):
+    listaContactos.deiconify()
+    ventana.destroy()
+
+def validarCorreo(correo):
+    patron = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
+    return patron.match(correo) is not None
 
 ##Ventana Principal -----------------------------------------------------------------------------------------------
 
@@ -78,6 +85,7 @@ cargarDatos()
 
 def btnAgregarContactos():
     
+    ocultar_ventana(listaContactos)
 
     ventanaAgregarContactos = Toplevel()
     ventanaAgregarContactos.title("Agregar nuevo contacto")
@@ -119,19 +127,23 @@ def btnAgregarContactos():
     def GuardarContacto():
    
      try:
-         nombre = txtBoxNombre.get()
-         apellido = txtBoxApellido.get()
-         numero = txtBoxNumero.get()
-         correo = txtBoxCorreo.get()
-         direccion = txtBoxDireccion.get()
-         relacion =  combo.get()
-         nuevoContacto = mo.Contacto(nombre, apellido, numero, correo, direccion, relacion)
+        nombre = txtBoxNombre.get()
+        apellido = txtBoxApellido.get()
+        numero = txtBoxNumero.get()
+        correo = txtBoxCorreo.get()
+        direccion = txtBoxDireccion.get()
+        relacion =  combo.get()
+        nuevoContacto = mo.Contacto(nombre, apellido, numero, correo, direccion, relacion)
          
-         if txtBoxNombre.get() == "" or txtBoxNumero.get() == "" :
-             messagebox.showinfo(title="Error", message="Ingrese el nombre y numero como campos obligatorios")
-         else:
+        if txtBoxNombre.get() == "" or txtBoxNumero.get() == "" :
+             messagebox.showinfo(title="Error", message="El número y el teléfono son campos obligatorios")
+         
+        elif validarCorreo(correo) == False:
+            messagebox.showinfo(title="Error", message="El correo no es válido")
+
+        else:
             co.Contacto.ingresarContacto(nuevoContacto)
-            messagebox.showinfo(title="Correcto", message="Se registro el contacto correctamente")
+            messagebox.showinfo(title="Correcto", message="El contacto se registró correctamente")
             limpiarTabla()
             cargarDatos()
 
@@ -143,10 +155,16 @@ def btnAgregarContactos():
             
 
      except ValueError as error:
-        print("Error al registrar nuevo contacto {}".format(error))       
+        print("Error al registrar nuevo contacto {}".format(error))  
+    
+    def btnRegresar():
+        ventanaAgregarContactos.destroy()
+        listaContactos.deiconify()
+  
 
     Button(groupBox, text ="Agregar", width=10, command= GuardarContacto,font=("Arial", 12)).grid(row=6, column=1, pady=25)
-    Button(groupBox, text = "Tus contactos", font=("Arial", 12),command=lambda: cerrar_ventana(ventanaAgregarContactos)).grid(row=6, column=0, pady=25)
+    Button(groupBox, text = "Regresar", font=("Arial", 12),command=btnRegresar).grid(row=6, column=0, pady=25)
+
 
 ##-------------------------------------------------------------------------------------------------------------------
 
@@ -223,7 +241,7 @@ def btnEditarContactos():
                 print("Error al editar el contacto{}".format(error))   
 
         Button(groupBox, text ="Editar", width=10, font=("Arial", 12),command=editarContacto).grid(row=6, column=1, pady=25)
-        Button(groupBox, text = "Tus contactos", font=("Arial", 12),command=lambda: cerrar_ventana(ventanaEditarContactos)).grid(row=6, column=0, pady=25)
+        Button(groupBox, text = "Tus contactos", font=("Arial", 12),command=lambda: mostrar_ventana(listaContactos)).grid(row=6, column=0, pady=25)
 
     except IndexError as error:
         messagebox.showinfo(title="Error", message="Por favor seleccione un contacto")
