@@ -45,9 +45,10 @@ def destruir_ventana(ventana):
     ventana.destroy()
 
 def validarCorreo(correo):
+    if correo == "":
+        return True
     patron = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
     return patron.match(correo) is not None
-
 ##Ventana Principal -----------------------------------------------------------------------------------------------
 
 centrar_ventana(listaContactos, 1220, 310)
@@ -124,7 +125,7 @@ def btnAgregarContactos():
     
     ##Funcion que captura los datos y utiliza la funcion ingresar datos del controlador
 
-    def GuardarContacto():
+    def guardarContacto():
    
      try:
         nombre = txtBoxNombre.get()
@@ -133,27 +134,32 @@ def btnAgregarContactos():
         correo = txtBoxCorreo.get()
         direccion = txtBoxDireccion.get()
         relacion =  combo.get()
-        nuevoContacto = mo.Contacto(nombre, apellido, numero, correo, direccion, relacion)
-         
+        
+        if co.Contacto.validar_telefono(numero) is not None:
+            messagebox.showinfo(title="Error", message="Ya existe un contacto con ese número")
+            return
+
         if txtBoxNombre.get() == "" or txtBoxNumero.get() == "" :
              messagebox.showinfo(title="Error", message="El número y el teléfono son campos obligatorios")
+             return
          
         elif validarCorreo(correo) == False:
             messagebox.showinfo(title="Error", message="El correo no es válido")
+            return
 
-        else:
-            co.Contacto.ingresarContacto(nuevoContacto)
-            messagebox.showinfo(title="Correcto", message="El contacto se registró correctamente")
-            limpiarTabla()
-            cargarDatos()
+        
+        nuevoContacto = mo.Contacto(nombre, apellido, numero, correo, direccion, relacion)
+        co.Contacto.ingresarContacto(nuevoContacto)
+        messagebox.showinfo(title="Correcto", message="El contacto se registró correctamente")
+        limpiarTabla()
+        cargarDatos()
 
-            txtBoxNombre.delete(0,END)
-            txtBoxApellido.delete(0,END) 
-            txtBoxNumero.delete(0,END) 
-            txtBoxCorreo.delete(0,END) 
-            txtBoxDireccion.delete(0,END)
+        txtBoxNombre.delete(0,END)
+        txtBoxApellido.delete(0,END) 
+        txtBoxNumero.delete(0,END) 
+        txtBoxCorreo.delete(0,END) 
+        txtBoxDireccion.delete(0,END)
             
-
      except ValueError as error:
         print("Error al registrar nuevo contacto {}".format(error))  
     
@@ -162,7 +168,7 @@ def btnAgregarContactos():
         listaContactos.deiconify()
   
 
-    Button(groupBox, text ="Agregar", width=10, command= GuardarContacto,font=("Arial", 12)).grid(row=6, column=1, pady=25)
+    Button(groupBox, text ="Agregar", width=10, command= guardarContacto,font=("Arial", 12)).grid(row=6, column=1, pady=25)
     Button(groupBox, text = "Regresar", font=("Arial", 12),command=btnRegresar).grid(row=6, column=0, pady=25)
 
 
@@ -253,7 +259,7 @@ def btnEliminarContacto():
     ContactoEliminar = tablaContactos.focus()
     nombreContacto = tablaContactos.item(ContactoEliminar)['values'][0]
     telefonoContacto = tablaContactos.item(ContactoEliminar)['values'][2]
-    mensaje = messagebox.askokcancel(title="Eliminar", message="¿Esta seguro de eliminar el contacto? "+ nombreContacto)
+    mensaje = messagebox.askokcancel(title="Eliminar", message=f"¿Estás seguro de que deseas eliminar a {str(nombreContacto)} de tu lista de contactos? ")
     if mensaje == True:
      co.Contacto.borrarContacto(telefonoContacto)
      limpiarTabla()

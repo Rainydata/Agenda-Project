@@ -2,7 +2,7 @@ from Conexion import *
 
 class Contacto:
 
-    def ingresarContacto(Contacto):
+   def ingresarContacto(Contacto):
 
         try:
             conexion = CConexion.ConexionBD()
@@ -14,7 +14,7 @@ class Contacto:
         except mysql.connector.Error as error:
             print("Error al conectar a la base de datos: {}".format(error))
 
-    def editarContacto(ID,Contacto): 
+   def editarContacto(ID,Contacto): 
 
          try:
             conexion = CConexion.ConexionBD()
@@ -26,7 +26,7 @@ class Contacto:
          except mysql.connector.Error as error:   
             print("Error al conectar la base de datos: {}".format(error))
     
-    def borrarContacto(telefono):
+   def borrarContacto(telefono):
        try:
           conexion = CConexion.ConexionBD()
           cursor = conexion.cursor()
@@ -38,7 +38,7 @@ class Contacto:
        except mysql.connector.Error as error:
           print("Error al eliminar el contacto: {}".format(error))
           
-    def buscarContacto(nombre, telefono):
+   def buscarContacto(nombre, telefono):
      try:
         conexion = CConexion.ConexionBD()
         cursor = conexion.cursor()
@@ -51,7 +51,7 @@ class Contacto:
      except mysql.connector.Error as error:
         print("Error al conectar a la base de datos: {}".format(error))
 
-    def cargar_contactos():
+   def cargar_contactos():
      try:
         conexion = CConexion.ConexionBD()
         cursor = conexion.cursor()
@@ -62,6 +62,20 @@ class Contacto:
         return resultado
      except mysql.connector.Error as error:
         print("Error al mostrar contacto: {} ".format(error))
+   
+   #funcion que valida si hay un contacto con el mismo telefono
+   def validar_telefono(telefono):
+     try:
+        conexion = CConexion.ConexionBD()
+        cursor = conexion.cursor()
+        sql = "SELECT * FROM Contacto WHERE telefono=%s"
+        valores = (telefono,)
+        cursor.execute(sql, valores)
+        resultado = cursor.fetchone()
+        conexion.close()
+        return resultado
+     except mysql.connector.Error as error:
+        print("Error al mostrar contacto: {} ".format(error))  
 
           
         
