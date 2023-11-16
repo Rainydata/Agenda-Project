@@ -7,7 +7,7 @@ import ControladorContactos as co
 from tkinter import messagebox
 import modelos as mo
 import re #Libreria para validar el correo
-
+from ControladorContactos import *
 listaContactos = Tk()
 
 
@@ -54,7 +54,7 @@ def validarCorreo(correo):
 
 ##Ventana Principal -----------------------------------------------------------------------------------------------
 
-centrar_ventana(listaContactos, 1220, 310)
+centrar_ventana(listaContactos, 1220, 345)
 
 listaContactos.title("Lista de contactos")
 listaContactos.configure(background="#144966")
@@ -140,6 +140,10 @@ def btnAgregarContactos():
         direccion = txtBoxDireccion.get()
         relacion =  combo.get()
         
+        if txtBoxNombre.get() == "" or txtBoxNumero.get() == "" :
+             messagebox.showinfo(title="Error", message="El número y el teléfono son campos obligatorios")
+             return
+        
         if not numero.isdigit():
             messagebox.showinfo(title="Error", message="El número no puede contener letras")
             return
@@ -150,10 +154,6 @@ def btnAgregarContactos():
         if co.Contacto.validar_telefono(numero) is not None:
             messagebox.showinfo(title="Error", message="Ya existe un contacto con ese número")
             return
-
-        if txtBoxNombre.get() == "" or txtBoxNumero.get() == "" :
-             messagebox.showinfo(title="Error", message="El número y el teléfono son campos obligatorios")
-             return
          
         elif validarCorreo(correo) == False:
             messagebox.showinfo(title="Error", message="El correo no es válido")
@@ -206,7 +206,7 @@ def btnEditarContactos():
         centrar_ventana(ventanaEditarContactos, 720, 300)
         ventanaEditarContactos.title("Editar contacto")
 
-        groupBox = LabelFrame(ventanaEditarContactos, text="Editar el contacto con el nombre: "+ ContactoNombre, padx=190)
+        groupBox = LabelFrame(ventanaEditarContactos, text="Editar el contacto con el nombre: "+ str(ContactoNombre), padx=190)
         groupBox.grid(row=0, column=0, padx=10, pady=10)
 
         labelNombre = Label(groupBox, text="Nombre: ", width=13, font=("Arial", 12)).grid(row=0, column=0)
@@ -253,6 +253,10 @@ def btnEditarContactos():
                 direccion = txtBoxDireccion.get()
                 relacion = combo.get()
 
+                if txtBoxNombre.get() == "" or txtBoxNumero.get() == "" :
+                    messagebox.showinfo(title="Error", message="El número y el teléfono son campos obligatorios")
+                    return
+
                 if not numero.isdigit():
                     messagebox.showinfo(title="Error", message="El número no puede contener letras")
                     return
@@ -261,14 +265,10 @@ def btnEditarContactos():
                     messagebox.showinfo(title="Error", message="El número no puede tener más de 15 dígitos")
                     return
 
-                if co.Contacto.validar_telefono(numero) is not None:
+                contacto = co.Contacto.validar_telefono(numero)
+                if contacto is not None and str(contacto[3]) != str(ContactoNumero):
                     messagebox.showinfo(title="Error", message="Ya existe un contacto con ese número")
-                    return
-
-                if txtBoxNombre.get() == "" or txtBoxNumero.get() == "" :
-                    messagebox.showinfo(title="Error", message="El número y el teléfono son campos obligatorios")
-                    return
-                
+                    return                
                 elif validarCorreo(correo) == False:
                     messagebox.showinfo(title="Error", message="El correo no es válido")
                     return
@@ -302,6 +302,37 @@ def btnEliminarContacto():
      limpiarTabla()
      cargarDatos()
 
+
+##---------------------------------------------------------------------------------------------------------------------------------------------------
+#Funcion que gestiona el campo de búsqueda
+def buscarContacto(*args):
+    # Get the search text
+    valor = campoBusqueda.get()
+
+    # Clear the contact list
+    limpiarTabla()
+
+    # Create an instance of the Contacto class
+    contacto = co.Contacto()
+
+    if valor:
+        # If valor is not empty, get the matching contacts from the database
+        datos = contacto.buscarContacto(valor, valor)
+        
+        # If datos is None, make it an empty list
+        if datos is None:
+            datos = []
+    else:
+        # If valor is empty, get all contacts from the database
+        datos = cargar_contactos()
+
+    # Load the contacts into the contact list
+    for fila in datos:
+        tablaContactos.insert("", "end", values=fila)
+
+campoBusqueda = tk.StringVar()
+campoBusqueda.trace("w", buscarContacto)
+
 ##------------------------------------------------------------------------------------------------------------------------
 #Creacion de botones CRUD de los contactos
 groupBox = LabelFrame(listaContactos)
@@ -311,6 +342,8 @@ btnAgregarContacto = Button(groupBox, text = "Agregar nuevo contacto", width=20,
 btnEditarContacto = Button(groupBox, text = "Editar contacto", width=20, font=("Arial", 10), command=btnEditarContactos).grid(row=0, column=1, pady=5, padx=5)
 btnEliminarContactos = Button(groupBox, text = "Eliminar contacto", width=20, font=("Arial", 10),command=btnEliminarContacto).grid(row=0, column=2, pady=5, padx=5)
 
+searchField = tk.Entry(listaContactos, textvariable=campoBusqueda, width=20)
+searchField.grid(row=2, column=0, pady=5, padx=5)
 ##------------------------------------------------------------------------------------------------------------------------
 
 
