@@ -52,23 +52,11 @@ class Contacto:
        except mysql.connector.Error as error:
           print("Error al eliminar el contacto: {}".format(error))
           
-   """def buscarContacto(nombre, telefono):
-     try:
-        conexion = CConexion.ConexionBD()
-        cursor = conexion.cursor()
-        sql = "SELECT * FROM contacto WHERE nombre=%s OR telefono=%s"
-        valores = (nombre, telefono)
-        cursor.execute(sql, valores)
-        resultados = cursor.fetchall()
-        for resultado in resultados:
-            print(resultado)  
-     except mysql.connector.Error as error:
-        print("Error al conectar a la base de datos: {}".format(error))"""
    
-   def buscarContacto(self, nombre, telefono):
+   def buscarContacto(self, nombre, telefono, apellido):
     try:
-        query = "SELECT nombre, apellido, telefono, correo, direccion, relacion FROM Contacto WHERE nombre LIKE %s OR telefono LIKE %s"
-        self.cursor.execute(query, ('%' + nombre + '%', '%' + telefono + '%'))
+        query = "SELECT nombre, apellido, telefono, correo, direccion, relacion FROM Contacto WHERE nombre LIKE %s OR telefono LIKE %s OR apellido LIKE %s"
+        self.cursor.execute(query, ('%' + nombre + '%', '%' + telefono + '%', '%' + apellido + '%'))
         return self.cursor.fetchall()
     except Exception as e:
         print(f"Error al buscar contacto: {e}")

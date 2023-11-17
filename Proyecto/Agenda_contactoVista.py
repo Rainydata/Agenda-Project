@@ -61,7 +61,7 @@ listaContactos.configure(background="#144966")
 
 groupBox = LabelFrame(listaContactos,fg="white", text="Tus contactos:")
 groupBox.grid(row=0, column=0)
-groupBox.config(background="#144966")
+groupBox.config(background="#144966", bd=0)
 
 style = ttk.Style()
 style.configure("Treeview",background="#7AAFCC")
@@ -330,7 +330,7 @@ def buscarContacto(*args):
 
     if valor:
         # Si el valor no esta vacio, obtiene los contactos coincidentes con la base de datos
-        datos = contacto.buscarContacto(valor, valor)
+        datos = contacto.buscarContacto(valor, valor, valor)
         
         # Si no hay ningun dato, se convierte en una lista vacia
         if datos is None:
@@ -351,7 +351,7 @@ campoBusqueda.trace("w", buscarContacto)
 #Creacion de botones CRUD de los contactos
 groupBox = LabelFrame(listaContactos)
 groupBox.grid(row=1, column=0)
-groupBox.config(background="#144966", highlightthickness=0)
+groupBox.config(background="#144966", bd=0)
 btnAgregarContacto = Button(groupBox, text = "Agregar nuevo contacto", width=20,font=("Arial", 10), command=btnAgregarContactos).grid(row=2, column=0, pady=5, padx=5)
 btnEditarContacto = Button(groupBox, text = "Editar contacto", width=20, font=("Arial", 10), command=btnEditarContactos).grid(row=2, column=1, pady=5, padx=5)
 btnEliminarContactos = Button(groupBox, text = "Eliminar contacto", width=20, font=("Arial", 10),command=btnEliminarContacto).grid(row=2, column=2, pady=5, padx=5)
